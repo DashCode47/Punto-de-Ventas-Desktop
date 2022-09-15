@@ -1,38 +1,576 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
   background-color: #282c34;
   min-height: 100vh;
+  align-items: center;
   display: flex;
-  flex-direction: column;
+  width: 1200px;
+ 
+}
+
+.rows{
+ display: flex;
+}
+
+.btn{
+  background-color: aliceblue;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  margin: 10px;
+  text-align: center;
   align-items: center;
   justify-content: center;
+}
+
+
+.App-header {
+  flex-direction: column;
+  display: flex;
+  align-items:flex-start;
+  justify-content:flex-start;
   font-size: calc(10px + 2vmin);
+ width: 100%;
+
+}
+.AppContain{
+  flex-direction: row;
+  display: flex;
+  position: absolute;
+  left: 5px;
+  justify-content: center;
+  align-items: center;
+  
+}
+.txt{
+  margin: 10px;
+  background-color: #282c34;
+  padding: 5px;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: flex;
   color: white;
+  width: 105px;
+  height: 115px;
+  border-radius: 25px;
+  font-weight: bold;
 }
 
-.App-link {
-  color: #61dafb;
+.txt:hover{
+  background-color: #ef715a;
+}
+.App-body{
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+/*///////////////////////////////////////////////////HOME  */
+.home-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+/*////////////////////////////////////////////////// INVENTARIO ///////////////////////*/
+.tabs-container{
+  display: flex;
+  margin-top: 20px;
+  border-radius: 25px;
+  align-self: center;
+  padding: 10px;
+  background-color: white;
+  align-self: center;
+  height: 520px;
+  padding-bottom: 40px;
+ 
+}
+.inventario{
+  display: flex;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+.left-panel{
+  flex-direction: column;
+  background-color: white;
+  display: flex;
+  width: 250px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+}
+.container-form{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+ 
+}
+.title{
+  margin-bottom: 5px;
+ margin-top: 5px;
+}
+.input{
+  margin-bottom: 2px;
+  width: 250px;
+  
+}
+.btn-inv{
+  width: 75px;
+  margin-bottom: 8px;
+}
+.panel{
+  display: flex;
+  min-width: 470px;
+  background-color: azure;
+  flex-direction: column;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+  overflow-y: auto;
+  height: 400px;
+}
+.top-tabs{
+  display: flex;
+  flex-direction: row;
+}
+.top-tab{
+  width: 80px;
+  height: 30px;
+  background-color: #282c34;
+  margin-left: 5px;
+  margin-right: 5px;
+
+}
+.panel-titles{
+  flex-direction: row;
+  display: flex;
+  background-color: azure;
+  border-style: solid;
+  height: 35px;
+  width: 90%;
+  border-width: 1px;
+ 
+}
+.pnl-title{
+  border-width: 1px;
+  border-right-style: solid;
+  border-color: #282c34;
+  padding: 5px;
+  height: 25px;
+  margin-top: 0;
+  width: 80px;
+}
+.pnl-check{
+  border-width: 1px;
+  border-right-style: solid;
+  border-color: #282c34;
+  padding: 5px;
+  height: 25px;
+  margin-top: 0;
+  width: 30px;
+}
+/* BOXINVENTARIO////////////////////////////////// */
+.container-box{
+ align-self: flex-start;
+ display: flex;
+}
+.container-box-factura-compras{
+  align-self: flex-start;
+ display: flex;
+ margin-left: 15px;
+}
+.container-box-factura-ventas{
+  align-self: flex-start;
+ display: flex;
+ margin-left: 7px;
+}
+.item-box{
+  width: 89px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  font-size: small;
+  padding-left: 1px;
+}
+.btn-box-items{
+  width: 90%;
+  
+}
+.item-box-buyed{
+  width: 145px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  font-size: small;
+  padding-left: 1px;
+}
+.item-box-buyed-factura{
+  width: 83.9px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  font-size: small;
+  padding-left: 1px;
+}
+.item-box-buyed-name{
+  width: 105px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  font-size: small;
+  padding-left: 1px;
+}
+.item-box-buyed-name-factura{
+  width: 84.2px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  font-size: small;
+  padding-left: 1px;
+}
+.item-box-check{
+  width: 40px;
+  background-color:rgb(134, 101, 255);
+  border-right-style: solid;
+  border-width: 1px;
+  border-bottom-style: solid;
+  padding-left: 1px;
+}
+.box-iva{
+  width: 20px;
+  height: 20px;
+}
+/* ///////////////////////////////////////////VENTAS//////////////////////////////////// */
+.ventas{
+  display: flex;
+  margin-top: 20px;
+  background-color: aliceblue;
+  flex-direction: column;
+  height: 500px;
+  padding: 25px;
+  border-radius: 25px;
+  align-self: flex-start;
+}
+
+.collapsable-container{
+  border-style: solid;
+  border-width: 1px;
+}
+.collaps-items-container{
+  background-color: white;
+  height: 20px;
+  flex-direction: column;
+  display: flex;
+}
+.collaps{
+  background-color: rgb(58, 126, 126);
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+.info-compra-pnl{
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+  margin-bottom: 1px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 10px;
+  width: 380px;
+  border-radius: 25px;
+  
+}
+.info-producto-pnl{
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 10px;
+  width: 575px;
+  border-radius: 22px;
+}
+.info-producto-pnl-compras{
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 10px;
+  width: 680px;
+}
+.boxes-container{
+  flex-direction: row;
+  display: flex;
+  justify-content: space-around;
+}
+.title{
+  margin-bottom: 0;
+}
+.title-inf-product{
+  flex-direction: row;
+  display: flex;
+}
+.container-total{
+  display: flex;
+  flex-direction: row;
+ max-height: 25px;
+ align-self: flex-end;
+ margin-right: 32px;
+ 
+}
+.titulo-factura-Total{
+  border-style: solid;
+  border-width: 1px;
+  padding-bottom: 4px;
+  background-color: #0d2ec4e7;
+  font-weight: bold;
+}
+.subtitulo-total{
+  font-size: 14px;
+  padding: 4px;
+  border-style: solid;
+  border-width: 1px;
+}
+.input{
+  width: 85px;
+}
+.btn-search{
+  margin-left: 20px;
+}
+.txt-inf-compra{
+  margin-top: 1px;
+  margin-bottom: 1px;
+  align-self: flex-start;
+}
+.top-panel{
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  
+}
+.panel-show{
+  border-style: solid;
+  border-width: 1px;
+  height: 200px;
+  width: 75%;
+  overflow-y: auto;
+  border-radius: 22px;
+}
+.titulos-panel{
+  flex-direction: row;
+  display: flex;
+  border-bottom-style: solid;
+  border-width: 1px;
+  
+}
+.titulo-panl{
+  border-right-style: solid;
+  border-width: 1px;
+  height:20px;
+  margin: 0;
+  padding: 5px; 
+  padding-left: 30px;
+  padding-right: 30px;
+  width: 91px;
+}
+.titulo-panl-factura{
+  border-right-style: solid;
+  border-top-style: solid;
+  border-top-style: solid;
+  border-width: 1px;
+  height:20px;
+  margin: 0;
+  padding: 5px; 
+  padding-left: 21px;
+  padding-right: 30px;
+  width: 34px;
+  font-size: 12px;
+ 
+}
+.container-bottom-panel{
+  flex-direction: row;
+  display: flex;
+}
+.input-stock{
+  width: 60px;
+}
+.btns-ventas{
+  justify-items: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+ margin-left: 15px;
+
+}
+.btn-pagar{
+  background-color: #0d2ec4e7;
+  border-width: 1px;
+  height: 40px;
+  width: 80px;
+  border-radius: 10px;
+  margin-top: 10px;
+  color: white;
+  font-weight: 700;
+  box-shadow: 4px 4px #888888;
+}
+.btn-factura{
+  background-color: #97ca90;
+  border-width: 1px;
+  height: 40px;
+  width: 60px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.btn-agregar{
+  background-color: #0d2ec4e7;
+  border-width: 1px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  box-shadow: 4px 4px #888888;
+}
+/* /////////////////////////////////////////////REGISTOS COMPRAS  */
+.compras-container{
+  width: 740px;
+  height: 500px;
+  overflow-y:scroll;
+  
+}
+.compras-item-container{
+  border-radius: 25px;
+  background-color:rgb(51, 137, 163) ;
+  margin-bottom: 8px;
+  flex-direction: row;
+  display: flex;
+  overflow-y: auto;
+  
+}
+.header-container-compras{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 50px;
+  border-radius: 25px;
+
+}
+.header-titulo{
+  background-color: rgb(116, 210, 226);
+  border-right-style: solid;
+  border-width: 1px;
+  align-content: center;
+  height: 50px;
+  width: 119px;
+
+}
+.collaps-items-compras-container{
+  width: 100%;
+}
+
+.icon-arrow{
+  align-self: flex-start;
+  
+}
+.campos-collapse-compra{
+  border-right-style: solid;
+  border-width: 1px;
+  width: 119px;
+  font-size: 12px;
+}
+
+.btn-registros-save{
+  background-color: #0d2ec4e7;
+  border-width: 1px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  box-shadow: 4px 4px #888888;
+  margin-top: 18px;
+  padding: 8px;
+}
+/* /////////////////////////////////////////////*MODAL SEARCH VENTAS  */
+
+.centereddiv{
+display: flex;
+height: 450px;
+width: 450px;
+flex-direction: column;
+}
+
+.button{
+border-radius: 20px;
+padding: 10px;
+
+}
+/*//////////////////////////////////////////////Modal  Factura //////////////////////////////*/
+
+.container-factura{
+  display: flex;
+height: 450px;
+width: 460px;
+flex-direction: column;
+align-items: center;
+justify-items: center;
+overflow-y: auto;
+}
+.title-factura{
+  margin-bottom: 1px;
+}
+/*/////////////////////////////////////// MODAL TIPO DOCUMENTO */
+.close{
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: rgb(150, 54, 54);
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  border-radius: 7px;
+}
+.container-tipoDoc{
+  display: flex;
+height: 150px;
+width: 170px;
+flex-direction: column;
+align-items: center;
+justify-items: center;
+padding: 1px;
+border-style: solid;
+border-width: 3px;
+}
+.titulos-modal-TipoDoc{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+}
+.titulo-modal-TipoDoc{
+  background-color: rgb(21, 110, 110);
+  margin-bottom: 1px;
+  margin-Top: 1px;
+  width: 95px;
+  padding-left: 5px;
+  border-radius: 25px;
+  text-align: center;
+  
+}
+
+@media screen and (min-width:1024px) {
+  .App {
+    text-align: center;
+    background-color: #282c34;
+    min-height: 100vh;
+    align-items: center;
+    display: flex;
+    width: 100%;
   }
 }
