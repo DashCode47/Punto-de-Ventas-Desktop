@@ -6,7 +6,7 @@ const VentasTab = () => {
   useEffect(() => {
     save();
   }, [ventaInfo]);
-  let a = 6 + 3 + "3";
+
   const ff = (arr) => {
     return arr.map((x) => x + 3).filter((x) => x < 7);
   };
@@ -26,7 +26,7 @@ const VentasTab = () => {
         <h3>No hay ventas aun</h3>
       )}
 
-      <button onClick={() => console.log(a)}>Eliminar todo</button>
+      <button onClick={() => {}}>Eliminar todo</button>
     </div>
   );
 };
