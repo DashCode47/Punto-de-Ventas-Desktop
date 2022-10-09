@@ -33,16 +33,17 @@ const Search_modal = ({ switcher, abridorModal, takeDatosProducto }) => {
             <h4 className="pnl-title">Codigo</h4>
             <h4 className="pnl-title">Nombre</h4>
             <h4 className="pnl-title">Precio</h4>
+            <h4 className="pnl-title">IVA</h4>
             <h4 className="pnl-title">Stock</h4>
           </div>
-          {data.map((data) => (
+          {data.map((data, index) => (
             <button
-              onClick={() => takeDatosProducto(data.data)}
+              onClick={() => takeDatosProducto(data.data, data.key)}
               style={{ paddingLeft: 0 }}
-              key={data.key}
+              key={index}
             >
               <ItemInventBox
-                key={data.key}
+                key={index}
                 valores={data}
                 llave={data.key}
                 renderButton={true}

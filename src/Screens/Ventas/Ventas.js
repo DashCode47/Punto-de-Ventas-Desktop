@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import Collapsible from "react-collapsible";
 import Search_modal from "../../modals/search_modal";
 import FacturaModal from "../../modals/facturaModal";
 import TipoDoc from "../../modals/TipoDoc";
@@ -17,31 +16,39 @@ const Ventas = () => {
   const [switcher, setswitcher] = useState(false);
   const [switcherB, setswitcherB] = useState(false);
   const [switcherC, setswitcherC] = useState(false);
-  const [collapsable, setcollapsable] = useState("Escoger");
   const [datosProducto, setDatosProducto] = useState([]);
   const [productToBuy, setproductToBuy] = useState([]);
   const [factura, setfactura] = useState({});
   const [cantidad, setcantidad] = useState(1);
+  const [actualKey, setActualKey] = useState("");
   const [total, settotal] = useState(0);
   const [checked, setchecked] = useState(false);
   const [tipo, settipo] = useState("");
+
+  const save = async () => {
+    localStorage.setItem("ventas", JSON.stringify(ventaInfo));
+  };
 
   useEffect(() => {
     save();
   }, [ventaInfo]);
 
+  useEffect(() => {
+    saveB();
+  }, [data]);
+  const saveB = async () => {
+    localStorage.setItem("items", JSON.stringify(data));
+  };
+
   const getByCodigo = (cod) => {
-    const objeto = data.filter((item) => item.data.codigo == cod);
+    const objeto = data.filter((item) => item.data.codigo === cod);
     const item = {
       codigo: cod,
       nombre: objeto.map((x) => x.data.nombre),
       precio: objeto.map((x) => x.data.precio),
+      stock: objeto.map((x) => x.data.stock),
     };
     setDatosProducto(item);
-  };
-
-  const save = async () => {
-    localStorage.setItem("ventas", JSON.stringify(ventaInfo));
   };
 
   const abridorModal = (val) => {
@@ -57,14 +64,15 @@ const Ventas = () => {
     settipo(val);
   };
   const onPagar = (values) => {
+    const objeto = {
+      fecha: format(new Date(values.fecha), "dd/MM/yyyy"),
+      tipo: tipo,
+      top: values,
+      bot: productToBuy,
+    };
     if (productToBuy.length > 0) {
       values.key = Math.random().toString();
-      const objeto = {
-        fecha: format(new Date(values.fecha), "dd/MM/yyyy"),
-        tipo: tipo,
-        top: values,
-        bot: productToBuy,
-      };
+
       setventaInfo((data) => {
         return [objeto, ...data];
       });
@@ -75,7 +83,7 @@ const Ventas = () => {
     if (!datosProducto.codigo) {
       alert("Seleccione un producto de la lista");
     }
-    if (datosProducto.stock < 1) {
+    if (datosProducto.stock < cantidad) {
       alert("No hay Stock");
     } else {
       if (checked) {
@@ -86,6 +94,22 @@ const Ventas = () => {
         datosProducto.iva = 0;
         datosProducto.subtotal = datosProducto.precio * cantidad;
       }
+      const updatedStockObj = {
+        key: datosProducto.key,
+        data: {
+          codigo: datosProducto.codigo,
+          precio: datosProducto.precio,
+          nombre: datosProducto.nombre,
+          iva: datosProducto.iva.toFixed(2),
+          stock: datosProducto.stock - cantidad,
+        },
+      };
+      setdata(
+        data.map((obj) =>
+          obj.data.codigo === datosProducto.codigo ? updatedStockObj : obj
+        )
+      );
+
       const elemento = {
         data: datosProducto,
         key: Math.random().toString(),
@@ -97,22 +121,59 @@ const Ventas = () => {
       setcantidad(1);
       settotal(datosProducto.subtotal + total);
     }
+    clearProducto();
   };
 
-  const clearData = (props) => {
-    setproductToBuy([]);
-    settotal(0);
+  const clearProducto = () => {
+    const item = {
+      codigo: "",
+      nombre: "",
+      precio: "",
+      stock: "",
+    };
+    setDatosProducto(item);
   };
-  const takeDatosProducto = (val) => {
+  const clearData = () => {
+    const item = {
+      codigo: "",
+      nombre: "",
+      precio: "",
+      stock: "",
+    };
+    setDatosProducto(item);
+    setproductToBuy([]);
+  };
+  const takeDatosProducto = (val, key) => {
     setDatosProducto(val);
+    setActualKey(key);
     setcantidad("1");
   };
 
   const deleted = (key) => {
-    const getPrecioData = productToBuy.filter((item) => item.key == key);
+    const getPrecioData = productToBuy.filter((item) => item.key === key);
     const getPrecio = parseFloat(getPrecioData.map((x) => x.subtotal));
+
+    const getStock = getPrecioData.map((x) => x.data.stock);
+    const getCodigo = getPrecioData.map((x) => x.data.codigo);
+
     settotal(total - getPrecio);
     setproductToBuy(productToBuy.filter((item) => item.key !== key));
+
+    const updatedDel = {
+      key: Math.random().toString(),
+      data: {
+        codigo: getCodigo.toString(),
+        precio: getPrecioData.map((x) => x.data.precio),
+        nombre: getPrecioData.map((x) => x.data.nombre),
+        iva: parseFloat(getPrecioData.map((x) => x.data.iva)).toFixed(2),
+        stock: parseInt(getStock),
+      },
+    };
+    setdata(
+      data.map((obj) =>
+        obj.data.codigo === getCodigo.toString() ? updatedDel : obj
+      )
+    );
   };
 
   return (
@@ -128,6 +189,7 @@ const Ventas = () => {
         switcher={switcherB}
         productToBuy={productToBuy}
         total={total}
+        clear={clearData}
       />
       <TipoDoc
         abridorModal={abridorModalC}
@@ -144,7 +206,7 @@ const Ventas = () => {
           numFact: "",
           nombre: "",
         }}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values) => {
           onPagar(values);
         }}
       >
@@ -158,7 +220,7 @@ const Ventas = () => {
                     <h4 className="txt-inf-compra">Fecha</h4>
                     <input
                       onChange={props.handleChange("fecha")}
-                      value={props.values.fecha}
+                      value={props.values.fecha || ""}
                       placeholder={"dd/MM/YYYY"}
                       type={"date"}
                     />
@@ -167,40 +229,17 @@ const Ventas = () => {
                     <h4 className="txt-inf-compra">Factura numero:</h4>
                     <input
                       onChange={props.handleChange("numFact")}
-                      value={props.values.numFact}
+                      value={props.values.numFact || ""}
                       type={"number"}
                     />
                   </div>
                 </div>
               </div>
-
+              {/* ///////////////////////////////////////////////////INFO CLIENTE */}
               <div className="info-compra-pnl">
                 <h3 className="txt-inf-compra">Informacion cliente</h3>
+
                 <div className="boxes-container">
-                  <div>
-                    <h4 className="txt-inf-compra">N~ Documento</h4>
-                    <input
-                      onChange={props.handleChange("doc")}
-                      value={props.values.doc}
-                    />
-                  </div>
-                  <div>
-                    <h4 className="txt-inf-compra">Correo</h4>
-                    <input
-                      onChange={props.handleChange("mail")}
-                      value={props.values.mail}
-                      type={"email"}
-                    />
-                  </div>
-                </div>
-                <div className="boxes-container">
-                  <div>
-                    <h4 className="txt-inf-compra">Nombre:</h4>
-                    <input
-                      onChange={props.handleChange("nombre")}
-                      value={props.values.nombre}
-                    />
-                  </div>
                   <div className="tipo-doc">
                     <h4 className="txt-inf-compra">Tipo Documento</h4>
                     <div className="collapsable-container">
@@ -213,6 +252,30 @@ const Ventas = () => {
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div>
+                    <h4 className="txt-inf-compra">N~ Documento</h4>
+                    <input
+                      onChange={props.handleChange("doc")}
+                      value={props.values.doc || ""}
+                    />
+                  </div>
+                </div>
+                <div className="boxes-container">
+                  <div>
+                    <h4 className="txt-inf-compra">Nombre:</h4>
+                    <input
+                      onChange={props.handleChange("nombre")}
+                      value={props.values.nombre || ""}
+                    />
+                  </div>
+                  <div>
+                    <h4 className="txt-inf-compra">Correo</h4>
+                    <input
+                      onChange={props.handleChange("mail")}
+                      value={props.values.mail || ""}
+                      type={"email"}
+                    />
                   </div>
                 </div>
               </div>
@@ -234,7 +297,7 @@ const Ventas = () => {
                   <h4 className="txt-inf-compra">Codigo Producto</h4>
                   <input
                     className="input"
-                    value={datosProducto.codigo}
+                    value={datosProducto.codigo || ""}
                     onChange={(event) => getByCodigo(event.target.value)}
                   />
                 </div>
@@ -268,7 +331,7 @@ const Ventas = () => {
                   <input
                     className="input-stock"
                     onChange={(event) => setcantidad(event.target.value)}
-                    value={cantidad}
+                    value={cantidad || ""}
                     type={"number"}
                   />
                 </div>
@@ -311,7 +374,9 @@ const Ventas = () => {
                   Factura
                 </button>
                 <button
-                  onClick={() => console.log(datosProducto) /* clearData() */}
+                  onClick={() =>
+                    /*  setproductToBuy(productToBuy.map((item)=>item={})) */ clearData()
+                  }
                   className="btn-pagar"
                 >
                   clear

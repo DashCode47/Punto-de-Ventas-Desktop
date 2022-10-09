@@ -12,6 +12,7 @@ const FacturaModal = ({
   factura,
   productToBuy,
   total,
+  clear,
 }) => {
   const { ventaInfo } = useContext(MyContext);
   const customStyles = {
@@ -45,16 +46,7 @@ const FacturaModal = ({
             alignItems: "center",
             width: "300px",
           }}
-        >
-          <div>
-            <h4 className="title-factura">N Factura</h4>
-            <a>{factura?.top?.numFact}</a>
-          </div>
-          <div>
-            <h4 className="title-factura">Fecha</h4>
-            <a>{factura.fecha}</a>
-          </div>
-        </div>
+        ></div>
 
         <h4 className="title-factura">Nombre Cliente:</h4>
         <a>{factura?.top?.nombre}</a>
@@ -78,25 +70,31 @@ const FacturaModal = ({
         </div>
 
         <div className="titulos-panel">
+          <h5 className="titulo-panl-factura">Fecha</h5>
+          <h5 className="titulo-panl-factura">N° Factura</h5>
+          <h5 className="titulo-panl-factura">Codigo</h5>
           <h5 className="titulo-panl-factura">Producto</h5>
           <h5 className="titulo-panl-factura">Precio </h5>
           <h5 className="titulo-panl-factura">Cantidad</h5>
-          <h5 className="titulo-panl-factura">IVA</h5>
+          <h5 className="titulo-panl-factura">IVA 12%</h5>
           <h5 className="titulo-panl-factura">SubTotal</h5>
         </div>
 
         {productToBuy.map((x) => (
-          <FacturaItemsBox key={x.key} valores={x} />
+          <FacturaItemsBox key={x.key} valores={x} factura={factura} />
         ))}
         <div className="container-total">
           <a className="titulo-factura-Total">Total:</a>
           <a className="subtitulo-total">{parseFloat(total).toFixed(2)}</a>
         </div>
 
-        <button className="button" onClick={() => abridorModal(true)}>
+        <button
+          className="button"
+          onClick={() => [abridorModal(true), clear()]}
+        >
           <a className="aStyle">Cerrar</a>
         </button>
-        <button className="button" onClick={() => console.log(factura)}>
+        <button className="button" onClick={() => console.log(productToBuy)}>
           <a className="aStyle">Imprimir</a>
         </button>
         <button className="button" onClick={() => abridorModal(true)}>

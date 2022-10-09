@@ -6,19 +6,31 @@ import RegistromisCompras from "../../modals/registomisCompras";
 import ListademisCompras from "../../Components/BuyedItemsBox/ListademisCompras";
 import TipoDoc from "../../modals/TipoDoc";
 const Compras = () => {
-  const [switcher, setswitcher] = useState(false);
+  /* CONTEXT */
   const { misCompras } = useContext(MyContext);
   const { setmisCompras } = useContext(MyContext);
+  const { data } = useContext(MyContext);
+  const { setdata } = useContext(MyContext);
+  /* SETTERS */
+  const [switcher, setswitcher] = useState(false);
   const [factura, setfactura] = useState({});
   const [datosProducto, setDatosProducto] = useState([]); //datos producto ingresado
   const [productToBuy, setproductToBuy] = useState([]); //productos en el panel
   const [total, settotal] = useState(0);
+  const [totalIva, settotalIva] = useState(0);
   const [onCheck, setonCheck] = useState(false);
   const [switcherC, setswitcherC] = useState(false);
   const [tipo, settipo] = useState("");
   useEffect(() => {
     save();
   }, [misCompras]);
+
+  useEffect(() => {
+    saveInventario();
+  }, [data]);
+  const saveInventario = async () => {
+    localStorage.setItem("items", JSON.stringify(data));
+  };
 
   const save = async () => {
     localStorage.setItem("compras", JSON.stringify(misCompras));
@@ -30,10 +42,10 @@ const Compras = () => {
   const abridorModalC = (val) => {
     setswitcherC(!val);
   };
-
+  /* ///////////////////////////////////////////////////ON REGISTRAR ////////////////*/
   const onRegistrar = (values) => {
     const elemento = {
-      fecha: format(new Date(values.fecha), "dd/MM/yyyy"),
+      fecha: values.fecha,
       elementos: productToBuy,
       data: values,
       iva: values.iva,
@@ -41,11 +53,63 @@ const Compras = () => {
       /* subtotal: values.subtotal, */
       tipo: tipo,
     };
+
+    if (data.filter((item) => item.data.codigo == values.codigo)) {
+      const inventario2 = {
+        key: elemento.key,
+        data: {
+          codigo: values.codigo,
+          nombre: values.nombre,
+          precio: values.precioC,
+          stock: parseInt(datosProducto.stock) + parseInt(values.cantidad),
+          iva: (values.iva / values.cantidad).toFixed(2),
+        },
+      };
+      setdata(
+        data.map((item) =>
+          item.data.codigo === values.codigo ? inventario2 : item
+        )
+      );
+    }
+    if (data.filter((item) => item.data.codigo == values.codigo) < 1) {
+      const inventario = {
+        key: elemento.key,
+        data: {
+          codigo: values.codigo,
+          nombre: values.nombre,
+          precio: values.precioC,
+          stock: values.cantidad,
+          iva: (values.iva / values.cantidad).toFixed(2),
+        },
+      };
+      setdata((actualData) => [inventario, ...actualData]);
+    }
+
     setfactura(elemento);
     setmisCompras((data) => [elemento, ...data]);
   };
-
+  /* ///////////////////////////////////////////////////////////////////////////// */
+  const getByCodigo = (cod) => {
+    const objeto = data.filter((item) => item.data.codigo == cod);
+    const item = {
+      codigo: cod,
+      nombre: objeto.map((x) => x.data.nombre),
+      precio: objeto.map((x) => x.data.precio),
+      stock: objeto.map((x) => x.data.stock),
+    };
+    setDatosProducto(item);
+  };
+  /*  //////////////////////////////////////// ON ADD PRODUCT /////////////////////////*/
   const onAddProduct = (values) => {
+    if (!values.nombre) {
+      values.nombre = datosProducto.nombre;
+    }
+    if (!values.precioC) {
+      values.precioC = datosProducto.precio;
+    }
+
+    values.codigo = datosProducto.codigo;
+
     if (onCheck == true) {
       values.iva = values.precioC * values.cantidad * 0.12;
       values.subtotal = values.precioC * values.cantidad + values.iva;
@@ -54,20 +118,21 @@ const Compras = () => {
       values.subtotal = values.precioC * values.cantidad + values.iva;
     }
     const elemento = {
-      fecha: format(new Date(values.fecha), "dd/MM/yyyy"),
+      fecha: values.fecha,
       data: values,
       iva: parseFloat(values.iva).toFixed(2),
       key: Math.random().toString(),
       subtotal: values.subtotal,
       tipo: tipo,
     };
+
     setproductToBuy((data) => {
       return [elemento, ...data];
     });
-
+    settotalIva(values.iva + totalIva);
     settotal(values.subtotal + total);
   };
-
+  /* //////////////////////////////////////////END ADD PRODUCT//////////////// */
   const settoCero = () => {
     settotal(0);
     setproductToBuy([]);
@@ -78,6 +143,8 @@ const Compras = () => {
     const getSubtotal = parseFloat(getPrecioData.map((x) => x.subtotal));
     settotal(total - getSubtotal);
     setproductToBuy(productToBuy.filter((item) => item.key !== key));
+
+    setdata(data.filter((item) => item.key !== key));
     alert("deleted");
   };
   const writeType = (val) => {
@@ -92,6 +159,7 @@ const Compras = () => {
         productToBuy={productToBuy}
         settoCero={settoCero}
         total={total}
+        totalIva={totalIva}
       />
       <TipoDoc
         abridorModal={abridorModalC}
@@ -101,9 +169,11 @@ const Compras = () => {
       <h1 className="title">Registrar mis Compras</h1>
       <Formik
         initialValues={{
+          n_factura: "",
           doc: "",
           razon: "",
           fecha: "",
+          proveedor: "",
           tipo: "",
           codigo: "",
           nombre: "",
@@ -111,7 +181,7 @@ const Compras = () => {
           precioV: "",
           cantidad: "",
         }}
-        onSubmit={(values, { resetForm }) => {
+        onSubmit={(values) => {
           onRegistrar(values);
         }}
       >
@@ -125,16 +195,16 @@ const Compras = () => {
                     <h4 className="txt-inf-compra">Fecha</h4>
                     <input
                       onChange={props.handleChange("fecha")}
-                      value={props.values.fecha}
+                      value={props.values.fecha || ""}
                       placeholder={"dd/MM/YYYY"}
                       type={"date"}
                     />
                   </div>
                   <div>
-                    <h4 className="txt-inf-compra">n documento</h4>
+                    <h4 className="txt-inf-compra">Factura numero:</h4>
                     <input
-                      onChange={props.handleChange("doc")}
-                      value={props.values.doc}
+                      onChange={props.handleChange("n_factura")}
+                      value={props.values.n_factura || ""}
                     />
                   </div>
                 </div>
@@ -157,10 +227,26 @@ const Compras = () => {
                     </div>
                   </div>
                   <div>
+                    <h4 className="txt-inf-compra">N~Documento</h4>
+                    <input
+                      onChange={props.handleChange("doc")}
+                      value={props.values.doc || ""}
+                    />
+                  </div>
+                </div>
+                <div className="boxes-container">
+                  <div>
+                    <h4 className="txt-inf-compra"> Proveedor:</h4>
+                    <input
+                      onChange={props.handleChange("proveedor")}
+                      value={props.values.proveedor || ""}
+                    />
+                  </div>
+                  <div>
                     <h4 className="txt-inf-compra">Razon social</h4>
                     <input
                       onChange={props.handleChange("razon")}
-                      value={props.values.razon}
+                      value={props.values.razon || ""}
                     />
                   </div>
                 </div>
@@ -174,8 +260,8 @@ const Compras = () => {
                   <h4 className="txt-inf-compra">Codigo Producto</h4>
                   <input
                     className="input"
-                    onChange={props.handleChange("codigo")}
-                    value={props.values.codigo}
+                    onChange={(event) => getByCodigo(event.target.value)}
+                    value={datosProducto.codigo || ""}
                   />
                 </div>
                 <div>
@@ -183,7 +269,7 @@ const Compras = () => {
                   <input
                     className="input"
                     onChange={props.handleChange("nombre")}
-                    value={props.values.nombre}
+                    value={props.values.nombre || datosProducto.nombre || ""}
                   />
                 </div>
                 <div>
@@ -191,7 +277,7 @@ const Compras = () => {
                   <input
                     className="input"
                     onChange={props.handleChange("precioC")}
-                    value={props.values.precioC}
+                    value={props.values.precioC || datosProducto.precio || ""}
                     type={"number"}
                   />
                 </div>
@@ -200,7 +286,7 @@ const Compras = () => {
                   <input
                     className="input"
                     onChange={props.handleChange("precioV")}
-                    value={props.values.precioV}
+                    value={props.values.precioV || ""}
                   />
                 </div>
                 <div>
@@ -208,7 +294,7 @@ const Compras = () => {
                   <input
                     className="input"
                     onChange={props.handleChange("cantidad")}
-                    value={props.values.cantidad}
+                    value={props.values.cantidad || ""}
                     type={"number"}
                   />
                 </div>
@@ -258,9 +344,7 @@ const Compras = () => {
                   Registrar
                 </button>
                 <button
-                  onClick={() =>
-                    console.log(factura.elementos.map((x) => x.data.doc))
-                  }
+                  onClick={() => console.log(productToBuy)}
                   className="btn-pagar"
                 >
                   cf

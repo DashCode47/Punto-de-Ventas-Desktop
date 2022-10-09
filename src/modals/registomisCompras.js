@@ -11,6 +11,7 @@ const RegistromisCompras = ({
   settoCero,
   productToBuy,
   total,
+  totalIva,
 }) => {
   const customStyles = {
     overlay: {
@@ -53,21 +54,28 @@ const RegistromisCompras = ({
             <a>{datos.data?.doc}</a>
           </div>
         </div>
-        <div>
-          <h4 className="title-factura">Fecha</h4>
-          <a>{datos.fecha}</a>
-        </div>
 
         <div className="titulos-panel">
-          <h5 className="titulo-panl-factura">Producto</h5>
+          <h5 className="titulo-panl-factura">Fecha</h5>
+          <h5 className="titulo-panl-factura">N Factura</h5>
+          <h5 className="titulo-panl-factura">Codigo</h5>
+          <h5 className="titulo-panl-factura">Nombre</h5>
           <h5 className="titulo-panl-factura">Precio </h5>
           <h5 className="titulo-panl-factura">Cantidad</h5>
           <h5 className="titulo-panl-factura">IVA</h5>
           <h5 className="titulo-panl-factura">SubTotal</h5>
         </div>
         {productToBuy.map((x) => (
-          <FacturaItemsBox key={x.key} valores={x} />
+          <FacturaItemsBox key={x.key} valores={x} fechaC={datos.fecha} />
         ))}
+        <div className="container-total">
+          <a className="titulo-factura-Total">Total sin IVA:</a>
+          <a className="subtitulo-total">{(total - totalIva).toFixed(2)}</a>
+        </div>
+        <div className="container-total">
+          <a className="titulo-factura-Total">Total IVA:</a>
+          <a className="subtitulo-total">{parseFloat(totalIva).toFixed(2)}</a>
+        </div>
         <div className="container-total">
           <a className="titulo-factura-Total">Total:</a>
           <a className="subtitulo-total">{parseFloat(total).toFixed(2)}</a>
@@ -76,7 +84,7 @@ const RegistromisCompras = ({
         <button className="button" onClick={() => abridorModal(true)}>
           <a className="aStyle">Cerrar</a>
         </button>
-        <button className="button" onClick={() => console.log()}>
+        <button className="button" onClick={() => console.log(productToBuy)}>
           <a className="aStyle">Imprimir</a>
         </button>
         <button className="button" onClick={() => abridorModal(true)}>

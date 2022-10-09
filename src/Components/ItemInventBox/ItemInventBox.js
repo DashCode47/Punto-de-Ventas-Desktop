@@ -14,6 +14,7 @@ const ItemInventBox = ({ deleted, llave, valores, renderButton }) => {
       <a className="item-box">{valores?.data?.codigo}</a>
       <a className="item-box">{valores?.data?.nombre}</a>
       <a className="item-box">{valores?.data?.precio}</a>
+      <a className="item-box">{valores?.data?.iva}</a>
       <a className="item-box">{valores?.data?.stock}</a>
     </div>
   );

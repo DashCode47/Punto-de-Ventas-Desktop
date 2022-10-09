@@ -1,7 +1,7 @@
 import React from "react";
 import Collapsible from "react-collapsible";
 import "../../../App.css";
-const ContainerItems = ({ elemento, key }) => {
+const ContainerItems = ({ elemento }) => {
   return (
     <div className="compras-item-container">
       <Collapsible trigger={`Factura de fechas ${elemento.fecha}`}>

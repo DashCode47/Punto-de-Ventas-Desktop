@@ -43,9 +43,9 @@ const TipoDoc = ({ switcher, abridorModal, writeType }) => {
           </button>
           <button
             className="titulo-modal-TipoDoc"
-            onClick={() => [writeType("Papeleta"), abridorModal(true)]}
+            onClick={() => [writeType("RUC"), abridorModal(true)]}
           >
-            Papeleta
+            RUC
           </button>
           <button
             className="titulo-modal-TipoDoc"
